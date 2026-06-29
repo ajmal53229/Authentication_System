@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #6366f1;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: #f8fafc;
+        }
+
+        /* User Dropdown */
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            transition: background 0.3s;
+            border: none;
+            background: none;
+            color: inherit;
+            font-family: inherit;
+        }
+
+        .user-menu:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+            text-align: left;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .dropdown-arrow {
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-left: 0.25rem;
+            transition: transform 0.3s;
+        }
+
+        /* Dropdown Menu */
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            background: rgba(30, 41, 59, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 0.5rem;
+            min-width: 220px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+        }
+
+        .user-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .user-dropdown:hover .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-header {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            margin-bottom: 0.25rem;
+        }
+
+        .dropdown-header .name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .dropdown-header .email {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 0.15rem;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #f8fafc;
+        }
+
+        .dropdown-item .icon {
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.06);
+            margin: 0.5rem 0.5rem;
+        }
+
+        .dropdown-item.logout {
+            color: #ef4444;
+        }
+
+        .dropdown-item.logout:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Hero Welcome */
+        .hero {
+            padding: 4rem 5%;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .welcome-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 0.5rem 1.25rem;
+            border-radius: 100px;
+            font-size: 0.9rem;
+            color: #818cf8;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.875rem 1.75rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #f8fafc;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Dashboard Cards */
+        .dashboard {
+            padding: 2rem 5% 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: #f8fafc;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 1.75rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon.blue { background: rgba(99, 102, 241, 0.15); }
+        .card-icon.pink { background: rgba(236, 72, 153, 0.15); }
+        .card-icon.cyan { background: rgba(6, 182, 212, 0.15); }
+        .card-icon.green { background: rgba(34, 197, 94, 0.15); }
+
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .card-stat {
+            margin-top: 1.25rem;
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+
+        .card-stat .number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-stat .label {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        /* Recent Activity */
+        .activity-section {
+            padding: 0 5% 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .activity-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 1.75rem;
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-header h3 {
+            font-size: 1.1rem;
+        }
+
+        .view-all {
+            color: #6366f1;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .view-all:hover {
+            text-decoration: underline;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .activity-dot.success { background: #22c55e; }
+        .activity-dot.warning { background: #f59e0b; }
+        .activity-dot.info { background: #6366f1; }
+
+        .activity-text {
+            flex: 1;
+        }
+
+        .activity-text p {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-text span {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem 5%;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: #6366f1;
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dropdown-menu {
+                right: -1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">
+            <div class="logo-icon">🔐</div>
+            <span>SecureAuth</span>
+        </div>
+
+        <div class="nav-right">
+            <ul class="nav-links">
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+
+            <!-- User Dropdown with Logout -->
+            <div class="user-dropdown">
+                <button class="user-menu">
+                    <div class="avatar">JD</div>
+                    <div class="user-info">
+                        <span class="user-name">John Doe</span>
+                        <span class="user-role">Admin</span>
+                    </div>
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+
+                <div class="dropdown-menu">
+                    <div class="dropdown-header">
+                        <div class="name">John Doe</div>
+                        <div class="email">john.doe@example.com</div>
+                    </div>
+                    
+                    <a href="#" class="dropdown-item">
+                        <span class="icon">👤</span>
+                        My Profile
+                    </a>
+                    
+                    <a href="#" class="dropdown-item">
+                        <span class="icon">⚙️</span>
+                        Account Settings
+                    </a>
+                    
+                    <a href="#" class="dropdown-item">
+                        <span class="icon">🔒</span>
+                        Security
+                    </a>
+                    
+                    <div class="dropdown-divider"></div>
+                    
+                    <a href="/logout" class="dropdown-item logout">
+                        <span class="icon">🚪</span>
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Welcome -->
+    <section class="hero">
+        <div class="welcome-badge">
+            <span>👋</span>
+            <span>Welcome back, John!</span>
+        </div>
+        <h1>Your <span>Dashboard</span></h1>
+        <p>Manage your account, monitor activity, and configure your security settings all in one place.</p>
+        <div class="hero-buttons">
+            <a href="#" class="btn btn-primary">Edit Profile</a>
+            <a href="#" class="btn btn-outline">Security Settings</a>
+        </div>
+    </section>
+
+    <!-- Stats Cards -->
+    <section class="dashboard">
+        <h2 class="section-title">Quick Overview</h2>
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-icon blue">🔒</div>
+                <h3>Login Sessions</h3>
+                <p>Active sessions across your devices</p>
+                <div class="card-stat">
+                    <span class="number">3</span>
+                    <span class="label">Active now</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon pink">🛡️</div>
+                <h3>Security Status</h3>
+                <p>Your account protection level</p>
+                <div class="card-stat">
+                    <span class="number">100%</span>
+                    <span class="label">Secured</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon cyan">📅</div>
+                <h3>Last Login</h3>
+                <p>Most recent account access</p>
+                <div class="card-stat">
+                    <span class="number">2h</span>
+                    <span class="label">Ago</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon green">✅</div>
+                <h3>2FA Enabled</h3>
+                <p>Two-factor authentication status</p>
+                <div class="card-stat">
+                    <span class="number">On</span>
+                    <span class="label">Protected</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Activity -->
+    <section class="activity-section">
+        <div class="activity-card">
+            <div class="activity-header">
+                <h3>Recent Activity</h3>
+                <a href="#" class="view-all">View All</a>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-dot success"></div>
+                <div class="activity-text">
+                    <p>Successful login from Chrome on Windows</p>
+                    <span>Today, 2:30 PM • IP: 192.168.1.1</span>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-dot info"></div>
+                <div class="activity-text">
+                    <p>Password changed successfully</p>
+                    <span>Yesterday, 11:15 AM</span>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-dot warning"></div>
+                <div class="activity-text">
+                    <p>New device login detected - iPhone 15</p>
+                    <span>Jun 26, 2026, 9:45 PM • New York, USA</span>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-dot success"></div>
+                <div class="activity-text">
+                    <p>2FA enabled for your account</p>
+                    <span>Jun 25, 2026, 4:20 PM</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 SecureAuth. Logged in as <strong>John Doe</strong> • <a href="/logout">Logout</a></p>
+    </footer>
+
+</body>
+</html>
